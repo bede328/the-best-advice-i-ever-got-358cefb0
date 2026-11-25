@@ -12,6 +12,11 @@ if (chars < 1 || chars > 200) {
 if (ENTRY.trim().length === 0) {
   throw new Error("entry must not be only whitespace");
 }
+// One sentence: exactly one sentence-terminating mark, at the very end.
+const terminators = (ENTRY.match(/[.!?]/g) ?? []).length;
+if (terminators !== 1 || !/[.!?]$/.test(ENTRY)) {
+  throw new Error(`entry must be exactly one sentence, found ${terminators} terminators`);
+}
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", ENTRY, "utf8");
